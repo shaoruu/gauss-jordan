@@ -1,9 +1,10 @@
 {
   "name": "gauss-jordan",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "description": "Gauss Jordan Elimination",
   "main": "dist/gauss-jordan.js",
   "module": "dist/gauss-jordan.es.js",
+  "umd": "dist/gauss-jordan.min.js",
   "files": [
     "dist/**/*"
   ],
