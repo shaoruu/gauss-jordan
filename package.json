@@ -1,40 +1,44 @@
 {
-    "name": "gauss-jordan",
-    "version": "1.1.6",
-    "description": "Gauss Jordan Elimination",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
-    "scripts": {
-        "format": "prettier --write \"src/**/*.ts\"",
-        "lint": "tslint -p tsconfig.json",
-        "test": "jest --config jestconfig.json",
-        "prepare": "yarn run build",
-        "prepublishOnly": "yarn test && yarn run lint",
-        "preversion": "yarn run lint",
-        "version": "yarn run format && git add -A src",
-        "postversion": "git push && git push --tags",
-        "build": "tsc"
-    },
-    "files": [
-        "lib/**/*"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/ian13456/gauss-jordan"
-    },
-    "keywords": [
-        "math"
-    ],
-    "author": "Ian Huang",
-    "license": "ISC",
-    "homepage": "https://github.com/ian13456/gausee-jordan/#readme",
-    "devDependencies": {
-        "@types/jest": "^26.0.10",
-        "jest": "^26.4.2",
-        "prettier": "^2.1.1",
-        "ts-jest": "^26.3.0",
-        "tslint": "^6.1.3",
-        "tslint-config-prettier": "^1.18.0",
-        "typescript": "^4.0.2"
-    }
+  "name": "gauss-jordan",
+  "version": "1.1.7",
+  "description": "Gauss Jordan Elimination",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "unpkg": "lib/gauss-jordan.min.js",
+  "jsdelivr": "lib/gauss-jordan.min.js",
+  "scripts": {
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "tslint -p tsconfig.json",
+    "test": "jest --config jestconfig.json",
+    "prepare": "yarn run build",
+    "prepublishOnly": "yarn test && yarn run lint",
+    "preversion": "yarn run lint",
+    "version": "yarn run format && git add -A src",
+    "postversion": "git push && git push --tags",
+    "minify": "ncc build lib/index.js -o dist && rm -rf lib && mv dist lib && mv lib/index.js lib/gauss-jordan.min.js",
+    "build": "tsc && yarn run minify"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ian13456/gauss-jordan"
+  },
+  "keywords": [
+    "math"
+  ],
+  "author": "Ian Huang",
+  "license": "ISC",
+  "homepage": "https://github.com/ian13456/gausee-jordan/#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.10",
+    "@vercel/ncc": "^0.24.0",
+    "jest": "^26.4.2",
+    "prettier": "^2.1.1",
+    "ts-jest": "^26.3.0",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.0.2"
+  }
 }
