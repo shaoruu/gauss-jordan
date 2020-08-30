@@ -1,4 +1,4 @@
-# gauss-jordan
+# Gauss Jordan
 
 ## Usage
 
