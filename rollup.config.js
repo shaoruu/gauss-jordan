@@ -14,9 +14,10 @@ export default {
     },
     {
       file: pkg.umd,
+      extend: true,
       format: 'umd',
       indent: false,
-      name: 'gauss-jordan',
+      name: 'GaussJordan',
     },
   ],
   external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
