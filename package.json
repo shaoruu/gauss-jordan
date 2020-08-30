@@ -1,10 +1,13 @@
 {
   "name": "gauss-jordan",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Gauss Jordan Elimination",
   "main": "dist/gauss-jordan.js",
-  "unpkg": "dist/gauss-jordan.min.js",
-  "jsdelivr": "dist/gauss-jordan.js",
+  "module": "dist/gauss-jordan.es.js",
+  "files": [
+    "dist/**/*"
+  ],
+  "types": "dist/index.d.ts",
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
@@ -14,13 +17,9 @@
     "preversion": "yarn run lint",
     "version": "yarn run format && git add -A src",
     "postversion": "git push && git push --tags",
-    "minify": "ncc build lib/index.js -o dist && rm -rf lib && mv dist lib",
-    "build": "tsc && yarn run minify",
-    "postbuild": "rollup -c"
+    "build": "rollup -c",
+    "watch": "rollup -cw"
   },
-  "files": [
-    "lib/**/*"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ian13456/gauss-jordan"
@@ -38,6 +37,7 @@
     "prettier": "^2.1.1",
     "rollup": "^2.26.8",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.27.2",
     "ts-jest": "^26.3.0",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
