@@ -12,6 +12,12 @@ export default {
       file: pkg.module,
       format: 'es',
     },
+    {
+      file: pkg.umd,
+      format: 'umd',
+      indent: false,
+      name: 'gauss-jordan',
+    },
   ],
   external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
   plugins: [
