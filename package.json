@@ -1,6 +1,6 @@
 {
   "name": "gauss-jordan",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Gauss Jordan Elimination",
   "main": "dist/gauss-jordan.js",
   "module": "dist/gauss-jordan.es.js",
