@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PrimeField should rref properly 1`] = `
+Array [
+  Array [
+    1,
+    0,
+    0,
+    4,
+  ],
+  Array [
+    0,
+    1,
+    0,
+    3,
+  ],
+  Array [
+    0,
+    0,
+    1,
+    0,
+  ],
+]
+`;
+
+exports[`RationalField should rref properly 1`] = `
+Array [
+  Array [
+    1,
+    0,
+    0,
+    2.481481481481482,
+  ],
+  Array [
+    0,
+    1,
+    0,
+    1.2962962962962963,
+  ],
+  Array [
+    -0,
+    -0,
+    1,
+    -1.4814814814814814,
+  ],
+]
+`;

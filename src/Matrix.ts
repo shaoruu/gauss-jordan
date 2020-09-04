@@ -1,15 +1,15 @@
-import { PrimeField } from './PrimeField';
+import { Field } from './Field';
 
-export class Matrix {
-  f: PrimeField;
-  values: number[][];
+export class Matrix<T> {
+  f: Field<T>;
+  values: T[][];
 
-  constructor(rows: number, cols: number, field: PrimeField) {
+  constructor(rows: number, cols: number, field: Field<T>) {
     if (rows <= 0 || cols <= 0) throw new Error('Invalid number of rows or columns');
 
     this.f = field;
 
-    this.values = new Array();
+    this.values = [];
     for (let i = 0; i < rows; i++) {
       this.values.push(new Array(cols));
     }
@@ -25,7 +25,7 @@ export class Matrix {
     return this.values[row][col];
   };
 
-  set = (row: number, col: number, val: number) => {
+  set = (row: number, col: number, val: T) => {
     if (!(0 <= row && row < this.values.length && 0 <= col && col < this.values[row].length))
       throw new Error('Row or column index out of bounds');
     this.values[row][col] = val;
@@ -40,13 +40,13 @@ export class Matrix {
     this.values[row1] = temp;
   };
 
-  multiplyRow = (row: number, factor: number) => {
+  multiplyRow = (row: number, factor: T) => {
     if (!(0 <= row && row < this.values.length)) throw new Error('Row index out of bounds');
 
     this.values[row] = this.values[row].map((n) => this.f.multiply(n, factor));
   };
 
-  addRows = (srcRow: number, destRow: number, factor: number) => {
+  addRows = (srcRow: number, destRow: number, factor: T) => {
     if (!(0 <= srcRow && srcRow < this.values.length && 0 <= destRow && destRow < this.values.length))
       throw new Error('Row index out of bounds');
 
@@ -56,7 +56,7 @@ export class Matrix {
     });
   };
 
-  multiply = (other: Matrix) => {
+  multiply = (other: Matrix<T>) => {
     const rows = this.rowCount();
     const cols = other.columnCount();
     const cells = this.columnCount();
@@ -122,6 +122,44 @@ export class Matrix {
       // Eliminate rows above
       for (let j = 0; j < i; j++) {
         this.addRows(i, j, this.f.negate(this.get(j, pivotCol)));
+      }
+    }
+
+    return this.values;
+  };
+
+  invert = () => {
+    /*
+    Replaces the values of this matrix with the inverse of this matrix. Requires the matrix to be square.
+		All elements of this matrix should be non-None when performing this operation.
+		Raises an exception if the matrix is singular (not invertible). If an exception is raised, this matrix is unchanged.
+		The time complexity of this operation is O(rows^3).
+    */
+    const rows = this.rowCount();
+    const cols = this.columnCount();
+
+    if (rows !== cols) throw new Error('Matrix dimensions are not square');
+
+    const temp = new Matrix<T>(rows, cols * 2, this.f);
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        temp.set(i, j, this.get(i, j));
+        temp.set(i, j + cols, i === j ? this.f.one() : this.f.zero());
+      }
+    }
+
+    temp.reducedRowEchelonForm();
+
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        if (!this.f.equals(temp.get(i, j), i === j ? this.f.one() : this.f.zero()))
+          throw new Error('Matrix is not invertible');
+      }
+    }
+
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        this.set(i, j, temp.get(i, j + cols));
       }
     }
 

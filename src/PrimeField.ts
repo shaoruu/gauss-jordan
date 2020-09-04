@@ -1,7 +1,12 @@
-export class PrimeField {
+import { Field } from './Field';
+import Utils from './utils';
+
+export class PrimeField extends Field<number> {
   modulus: number;
 
   constructor(mod: number) {
+    super();
+
     this.modulus = mod;
   }
 
@@ -11,13 +16,11 @@ export class PrimeField {
 
   equals = (x: number, y: number) => this._check(x) === this._check(y);
 
-  negate = (x: number) => this._pymod(-this._check(x), this.modulus);
+  negate = (x: number) => Utils.mod(-this._check(x), this.modulus);
 
-  add = (x: number, y: number) => this._pymod(this._check(x) + this._check(y), this.modulus);
+  add = (x: number, y: number) => Utils.mod(this._check(x) + this._check(y), this.modulus);
 
-  subtract = (x: number, y: number) => this._pymod(this._check(x) - this._check(y), this.modulus);
-
-  multiply = (x: number, y: number) => this._pymod(this._check(x) * this._check(y), this.modulus);
+  multiply = (x: number, y: number) => Utils.mod(this._check(x) * this._check(y), this.modulus);
 
   reciprocal = (w: number) => {
     // Extended Euclidean GCD algorithm
@@ -30,7 +33,7 @@ export class PrimeField {
 
     while (y !== 0) {
       const q = Math.floor(x / y);
-      const r = this._pymod(x, y);
+      const r = Utils.mod(x, y);
       x = y;
       y = r;
       const temp = a;
@@ -39,7 +42,7 @@ export class PrimeField {
     }
 
     if (x !== 1) throw new Error('Field modulus is not prime');
-    return this._pymod(a, this.modulus);
+    return Utils.mod(a, this.modulus);
   };
 
   _check = (x: number) => {
@@ -47,6 +50,4 @@ export class PrimeField {
     if (!(0 <= x && x < this.modulus)) throw new Error('Not an element of this field: ' + x);
     return x;
   };
-
-  _pymod = (a: number, b: number) => ((a % b) + b) % b;
 }

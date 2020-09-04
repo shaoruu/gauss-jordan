@@ -1,28 +1,70 @@
 import { PrimeField } from '../PrimeField';
+import { RationalField } from '../RationalField';
 import { Matrix } from '../Matrix';
 
-it('test', () => {
-  const modulus = 7;
+describe('PrimeField', () => {
+  it('should rref properly', () => {
+    const modulus = 7;
 
-  const input = [
-    [3, 1, 4, 1],
-    [5, 2, 6, 5],
-    [0, 5, 2, 1],
-  ];
+    const input = [
+      [3, 1, 4, 1],
+      [5, 2, 6, 5],
+      [0, 5, 2, 1],
+    ];
 
-  const p = new PrimeField(modulus);
-  const m = new Matrix(input.length, input[0].length, p);
+    const p = new PrimeField(modulus);
+    const m = new Matrix<number>(input.length, input[0].length, p);
 
-  for (let i = 0; i < input.length; i++)
-    for (let j = 0; j < input[i].length; j++) {
-      m.set(i, j, input[i][j]);
-    }
+    for (let i = 0; i < input.length; i++)
+      for (let j = 0; j < input[i].length; j++) {
+        m.set(i, j, input[i][j]);
+      }
 
-  m.reducedRowEchelonForm();
+    m.reducedRowEchelonForm();
 
-  expect(m.values).toEqual([
-    [1, 0, 0, 4],
-    [0, 1, 0, 3],
-    [0, 0, 1, 0],
-  ]);
+    expect(m.values).toMatchSnapshot();
+  });
+});
+
+describe('RationalField', () => {
+  it('should rref properly', () => {
+    const input = [
+      [2, 5, 3, 7],
+      [1, 0, 1, 1],
+      [-4, 2, -9, 6],
+    ];
+
+    const r = new RationalField();
+    const m = new Matrix<number>(input.length, input[0].length, r);
+
+    for (let i = 0; i < input.length; i++)
+      for (let j = 0; j < input[i].length; j++) {
+        m.set(i, j, input[i][j]);
+      }
+
+    m.reducedRowEchelonForm();
+
+    expect(m.values).toMatchSnapshot();
+  });
+
+  it('should invert properly', () => {
+    const input = [
+      [1, 3, 5, 9],
+      [1, 3, 1, 7],
+      [4, 3, 9, 7],
+      [5, 2, 0, 9],
+    ];
+
+    const r = new RationalField();
+    const m = new Matrix<number>(input.length, input[0].length, r);
+
+    for (let i = 0; i < input.length; i++)
+      for (let j = 0; j < input[i].length; j++) {
+        m.set(i, j, input[i][j]);
+      }
+
+    m.invert();
+
+    expect(m.values).toMatchSnapshot();
+  });
 });

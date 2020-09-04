@@ -33,7 +33,10 @@
   "homepage": "https://github.com/ian13456/gausee-jordan/#readme",
   "devDependencies": {
     "@types/jest": "^26.0.10",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
     "@vercel/ncc": "^0.24.0",
+    "eslint": "^7.8.1",
     "jest": "^26.4.2",
     "prettier": "^2.1.1",
     "rollup": "^2.26.8",
