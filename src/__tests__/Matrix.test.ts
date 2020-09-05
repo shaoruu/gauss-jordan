@@ -2,6 +2,20 @@ import { PrimeField } from '../PrimeField';
 import { RationalField } from '../RationalField';
 import { Matrix } from '../Matrix';
 
+describe('Matrix', () => {
+  it('should create from rational array', () => {
+    const input = [
+      [3, 1, 4, 1],
+      [5, 2, 6, 5],
+      [0, 5, 2, 1],
+    ];
+
+    const m = Matrix.fromRationalArray(input);
+
+    expect(m).toMatchSnapshot();
+  });
+});
+
 describe('PrimeField', () => {
   it('should rref properly', () => {
     const modulus = 7;
@@ -43,27 +57,6 @@ describe('RationalField', () => {
       }
 
     m.reducedRowEchelonForm();
-
-    expect(m.values).toMatchSnapshot();
-  });
-
-  it('should invert properly', () => {
-    const input = [
-      [1, 3, 5, 9],
-      [1, 3, 1, 7],
-      [4, 3, 9, 7],
-      [5, 2, 0, 9],
-    ];
-
-    const r = new RationalField();
-    const m = new Matrix<number>(input.length, input[0].length, r);
-
-    for (let i = 0; i < input.length; i++)
-      for (let j = 0; j < input[i].length; j++) {
-        m.set(i, j, input[i][j]);
-      }
-
-    m.invert();
 
     expect(m.values).toMatchSnapshot();
   });

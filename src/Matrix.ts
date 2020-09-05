@@ -1,4 +1,5 @@
 import { Field } from './Field';
+import { RationalField } from './RationalField';
 
 export class Matrix<T> {
   f: Field<T>;
@@ -13,6 +14,18 @@ export class Matrix<T> {
     for (let i = 0; i < rows; i++) {
       this.values.push(new Array(cols));
     }
+  }
+
+  static fromRationalArray(array: number[][]) {
+    const f = new RationalField();
+    const m = new Matrix<number>(array.length, array[0].length, f);
+
+    for (let i = 0; i < array.length; i++)
+      for (let j = 0; j < array[i].length; j++) {
+        m.set(i, j, array[i][j]);
+      }
+
+    return m;
   }
 
   rowCount = () => this.values.length;
@@ -122,44 +135,6 @@ export class Matrix<T> {
       // Eliminate rows above
       for (let j = 0; j < i; j++) {
         this.addRows(i, j, this.f.negate(this.get(j, pivotCol)));
-      }
-    }
-
-    return this.values;
-  };
-
-  invert = () => {
-    /*
-    Replaces the values of this matrix with the inverse of this matrix. Requires the matrix to be square.
-		All elements of this matrix should be non-None when performing this operation.
-		Raises an exception if the matrix is singular (not invertible). If an exception is raised, this matrix is unchanged.
-		The time complexity of this operation is O(rows^3).
-    */
-    const rows = this.rowCount();
-    const cols = this.columnCount();
-
-    if (rows !== cols) throw new Error('Matrix dimensions are not square');
-
-    const temp = new Matrix<T>(rows, cols * 2, this.f);
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        temp.set(i, j, this.get(i, j));
-        temp.set(i, j + cols, i === j ? this.f.one() : this.f.zero());
-      }
-    }
-
-    temp.reducedRowEchelonForm();
-
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        if (!this.f.equals(temp.get(i, j), i === j ? this.f.one() : this.f.zero()))
-          throw new Error('Matrix is not invertible');
-      }
-    }
-
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        this.set(i, j, temp.get(i, j + cols));
       }
     }
 

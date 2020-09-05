@@ -1,5 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Matrix should create from rational array 1`] = `
+Matrix {
+  "addRows": [Function],
+  "columnCount": [Function],
+  "f": RationalField {
+    "add": [Function],
+    "equals": [Function],
+    "multiply": [Function],
+    "negate": [Function],
+    "one": [Function],
+    "reciprocal": [Function],
+    "zero": [Function],
+  },
+  "get": [Function],
+  "multiply": [Function],
+  "multiplyRow": [Function],
+  "reducedRowEchelonForm": [Function],
+  "rowCount": [Function],
+  "set": [Function],
+  "swapRows": [Function],
+  "values": Array [
+    Array [
+      3,
+      1,
+      4,
+      1,
+    ],
+    Array [
+      5,
+      2,
+      6,
+      5,
+    ],
+    Array [
+      0,
+      5,
+      2,
+      1,
+    ],
+  ],
+}
+`;
+
 exports[`PrimeField should rref properly 1`] = `
 Array [
   Array [
@@ -19,35 +62,6 @@ Array [
     0,
     1,
     0,
-  ],
-]
-`;
-
-exports[`RationalField should invert properly 1`] = `
-Array [
-  Array [
-    -0.27659574468085113,
-    0.04255319148936154,
-    0.14893617021276606,
-    0.12765957446808507,
-  ],
-  Array [
-    -0.6250000000000001,
-    0.8750000000000001,
-    0.25,
-    -0.25,
-  ],
-  Array [
-    0.10372340425531912,
-    -0.1409574468085106,
-    0.06914893617021277,
-    -0.04787234042553192,
-  ],
-  Array [
-    0.29255319148936176,
-    -0.2180851063829788,
-    -0.13829787234042554,
-    0.09574468085106384,
   ],
 ]
 `;
