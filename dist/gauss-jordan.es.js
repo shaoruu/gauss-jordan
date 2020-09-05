@@ -1,3 +1,61 @@
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+var Field = /** @class */ (function () {
+    function Field() {
+    }
+    Field.prototype.subtract = function (x, y) {
+        return this.add(x, this.negate(y));
+    };
+    Field.prototype.divide = function (x, y) {
+        return this.multiply(x, this.reciprocal(y));
+    };
+    return Field;
+}());
+
+var RationalField = /** @class */ (function (_super) {
+    __extends(RationalField, _super);
+    function RationalField() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.zero = function () { return 0; };
+        _this.one = function () { return 1; };
+        _this.equals = function (x, y) { return x === y; };
+        _this.negate = function (x) { return -x; };
+        _this.add = function (x, y) { return x + y; };
+        _this.reciprocal = function (x) { return 1 / x; };
+        _this.multiply = function (x, y) { return x * y; };
+        return _this;
+    }
+    RationalField.FIELD = new RationalField();
+    return RationalField;
+}(Field));
+
 var Matrix = /** @class */ (function () {
     function Matrix(rows, cols, field) {
         var _this = this;
@@ -95,38 +153,6 @@ var Matrix = /** @class */ (function () {
             }
             return _this.values;
         };
-        this.invert = function () {
-            /*
-            Replaces the values of this matrix with the inverse of this matrix. Requires the matrix to be square.
-                All elements of this matrix should be non-None when performing this operation.
-                Raises an exception if the matrix is singular (not invertible). If an exception is raised, this matrix is unchanged.
-                The time complexity of this operation is O(rows^3).
-            */
-            var rows = _this.rowCount();
-            var cols = _this.columnCount();
-            if (rows !== cols)
-                throw new Error('Matrix dimensions are not square');
-            var temp = new Matrix(rows, cols * 2, _this.f);
-            for (var i = 0; i < rows; i++) {
-                for (var j = 0; j < cols; j++) {
-                    temp.set(i, j, _this.get(i, j));
-                    temp.set(i, j + cols, i === j ? _this.f.one() : _this.f.zero());
-                }
-            }
-            temp.reducedRowEchelonForm();
-            for (var i = 0; i < rows; i++) {
-                for (var j = 0; j < cols; j++) {
-                    if (!_this.f.equals(temp.get(i, j), i === j ? _this.f.one() : _this.f.zero()))
-                        throw new Error('Matrix is not invertible');
-                }
-            }
-            for (var i = 0; i < rows; i++) {
-                for (var j = 0; j < cols; j++) {
-                    _this.set(i, j, temp.get(i, j + cols));
-                }
-            }
-            return _this.values;
-        };
         if (rows <= 0 || cols <= 0)
             throw new Error('Invalid number of rows or columns');
         this.f = field;
@@ -135,48 +161,16 @@ var Matrix = /** @class */ (function () {
             this.values.push(new Array(cols));
         }
     }
+    Matrix.fromRationalArray = function (array) {
+        var f = new RationalField();
+        var m = new Matrix(array.length, array[0].length, f);
+        for (var i = 0; i < array.length; i++)
+            for (var j = 0; j < array[i].length; j++) {
+                m.set(i, j, array[i][j]);
+            }
+        return m;
+    };
     return Matrix;
-}());
-
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-/* global Reflect, Promise */
-
-var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-    return extendStatics(d, b);
-};
-
-function __extends(d, b) {
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-}
-
-var Field = /** @class */ (function () {
-    function Field() {
-    }
-    Field.prototype.subtract = function (x, y) {
-        return this.add(x, this.negate(y));
-    };
-    Field.prototype.divide = function (x, y) {
-        return this.multiply(x, this.reciprocal(y));
-    };
-    return Field;
 }());
 
 var mod = function (a, b) { return ((a % b) + b) % b; };
@@ -224,23 +218,6 @@ var PrimeField = /** @class */ (function (_super) {
         return _this;
     }
     return PrimeField;
-}(Field));
-
-var RationalField = /** @class */ (function (_super) {
-    __extends(RationalField, _super);
-    function RationalField() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.zero = function () { return 0; };
-        _this.one = function () { return 1; };
-        _this.equals = function (x, y) { return x === y; };
-        _this.negate = function (x) { return -x; };
-        _this.add = function (x, y) { return x + y; };
-        _this.reciprocal = function (x) { return 1 / x; };
-        _this.multiply = function (x, y) { return x * y; };
-        return _this;
-    }
-    RationalField.FIELD = new RationalField();
-    return RationalField;
 }(Field));
 
 export { Matrix, PrimeField, RationalField, Utils };
